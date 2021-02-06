@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "name": "Armario",
+    "seller": "Conforama",
+    "category": "Office",
+    "price": "259.99",
+    "date": "05.02",
+    "registered": false,
+    "status": "pending",
+    "scope": "Professional"
+  },
+  {
+    "id": 2,
+    "name": "Lunch",
+    "seller": "Basag",
+    "category": "Food",
+    "price": "25.80",
+    "date": "02.02",
+    "registered": false,
+    "status": "pending",
+    "scope": "Professional"
+  },
+  {
+    "id": 3,
+    "name": "Lunch",
+    "seller": "Fruly",
+    "category": "Food",
+    "price": "26.88",
+    "date": "04.02",
+    "registered": true,
+    "status": "pending",
+    "scope": "Professional"
+  }
+]
