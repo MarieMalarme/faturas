@@ -1,12 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Component } from './lib.js'
-
-export const fetch_data = async (path, set_data) => {
-  const response = await fetch(`http://localhost:5000/${path}`)
-  const data = await response.json()
-  if (!data) return
-  set_data(data)
-}
+import { Component, fetch_data, update_data } from './lib.js'
 
 const App = () => {
   const [faturas, set_faturas] = useState([])
@@ -27,13 +20,18 @@ const App = () => {
         </Link>
       </Header>
       {categories.map((category) => (
-        <Faturas key={category} faturas={faturas} category={category} />
+        <Faturas
+          key={category}
+          faturas={faturas}
+          set_faturas={set_faturas}
+          category={category}
+        />
       ))}
     </Page>
   )
 }
 
-const Faturas = ({ faturas, category }) => {
+const Faturas = ({ faturas, set_faturas, category }) => {
   const registered_category = category === 'registered'
   const filtered_faturas = faturas.filter(
     ({ registered, status }) =>
@@ -52,14 +50,14 @@ const Faturas = ({ faturas, category }) => {
         {category}
       </Section>
       {filtered_faturas.map((fatura) => (
-        <Fatura key={fatura.id} fatura={fatura} />
+        <Fatura key={fatura.id} fatura={fatura} set_faturas={set_faturas} />
       ))}
     </Table>
   )
 }
 
-const Fatura = ({ fatura }) => {
-  const { name, seller, price, date, category, scope, registered } = fatura
+const Fatura = ({ fatura, set_faturas }) => {
+  const { name, seller, price, date, category, scope, registered, id } = fatura
   return (
     <Row>
       <Column>{name}</Column>
@@ -68,7 +66,13 @@ const Fatura = ({ fatura }) => {
       <Column>{date}</Column>
       <Column>{category}</Column>
       <Column>{scope}</Column>
-      <Button ba={registered} shadow_a_s={!registered}>
+      <Button
+        ba={registered}
+        shadow_a_s={!registered}
+        onClick={() => {
+          update_data(id, set_faturas, { registered: !registered })
+        }}
+      >
         {registered && 'un'}register
       </Button>
     </Row>
@@ -83,7 +87,7 @@ const Table = Component.mt100.div()
 const Section = Component.fs18.mb25.pv10.uppercase.mono.ls2.bb.div()
 const Row = Component.flex.ai_center.bb.b_grey2.pv20.div()
 const Column = Component.flex1.div()
-const Button = Component.w110.text_center.b_rad4.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
+const Button = Component.ml100.w110.text_center.b_rad4.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
 
 const categories = ['pending', 'unregistered', 'registered']
 
