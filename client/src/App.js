@@ -14,7 +14,7 @@ const App = () => {
         </Link>
       </Header>
       {categories.map((category) => (
-        <Faturas faturas={faturas} category={category} />
+        <Faturas key={category} faturas={faturas} category={category} />
       ))}
     </Page>
   )
@@ -39,7 +39,7 @@ const Faturas = ({ faturas, category }) => {
         {category}
       </Section>
       {filtered_faturas.map((fatura) => (
-        <Fatura fatura={fatura} />
+        <Fatura key={fatura.id} fatura={fatura} />
       ))}
     </Table>
   )
