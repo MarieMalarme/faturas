@@ -1,7 +1,20 @@
+import { useState, useEffect } from 'react'
 import { Component } from './lib.js'
-import { faturas } from './faturas.js'
+
+export const fetch_data = async (path, set_data) => {
+  const response = await fetch(`http://localhost:5000/${path}`)
+  const data = await response.json()
+  if (!data) return
+  set_data(data)
+}
 
 const App = () => {
+  const [faturas, set_faturas] = useState([])
+
+  useEffect(() => {
+    fetch_data('faturas', set_faturas)
+  }, [faturas.length, set_faturas])
+
   return (
     <Page>
       <Header>
