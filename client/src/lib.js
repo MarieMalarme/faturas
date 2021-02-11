@@ -1,5 +1,15 @@
 import { atomizify, flagify } from 'atomizify'
 
+atomizify({
+  custom_classes: {
+    mono: `font-family: 'IBM Plex Mono'`,
+    h1: 'height: 1px',
+    mr_auto: 'margin-right: auto',
+  },
+})
+
+export const { Component, Div } = flagify()
+
 export const fetch_data = async (path, set_data) => {
   const response = await fetch(`http://localhost:5000/${path}`)
   const data = await response.json()
@@ -28,5 +38,5 @@ export const delete_data = (id, set_data) => {
   send_data('delete', `faturas/${id}`, set_data)
 }
 
-atomizify({ custom_classes: { mono: `font-family: 'IBM Plex Mono'` } })
-export const { Component } = flagify()
+export const array = (length) => [...Array(length).keys()]
+export const add0 = (number) => number.toString().padStart(2, '0')
