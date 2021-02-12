@@ -95,55 +95,39 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
         </Day>
         <Scope flex1={rows}>{scope}</Scope>
       </Infos>
-      <Input
-        type="name"
-        order2={grid}
-        fs22={grid}
-        mt20={grid}
-        order1={rows}
-        flex1={rows}
-        fatura={fatura}
-        faturas={faturas}
-        set_faturas={set_faturas}
-      />
-      <Input
-        type="seller"
-        order3={grid}
-        mb20={grid}
-        mt10={grid}
-        order2={rows}
-        flex1={rows}
-        fatura={fatura}
-        faturas={faturas}
-        set_faturas={set_faturas}
-      />
-      <Input
-        type="price"
-        mb20={grid}
-        flex1={rows}
-        flex1={rows}
-        fatura={fatura}
-        faturas={faturas}
-        set_faturas={set_faturas}
-      />
+      {Object.entries(inputs).map((input) => (
+        <Input
+          input={input}
+          mode={mode}
+          fatura={fatura}
+          faturas={faturas}
+          set_faturas={set_faturas}
+        />
+      ))}
       <Registration registered={registered} id={id} set_faturas={set_faturas} />
     </Container>
   )
 }
 
-const Input = ({ type, fatura, faturas, set_faturas, ...props }) => {
-  const Component = inputs[type]
+const Input = ({ input, mode, fatura, faturas, set_faturas }) => {
+  const [key, { component, classes }] = input
+  const Component = component
   const other_faturas = faturas.filter((f) => f.id !== fatura.id)
+  const flags = Object.assign(
+    {},
+    ...classes[mode].map((classe) => ({ [classe]: true })),
+  )
 
   return (
     <Component
       spellcheck="false"
-      value={fatura[type]}
+      value={fatura[key]}
+      text_center={mode === 'grid'}
       onChange={({ target }) => {
-        set_faturas([...other_faturas, { ...fatura, [type]: target.value }])
-        update_data(fatura.id, set_faturas, { [type]: target.value }, 500)
+        set_faturas([...other_faturas, { ...fatura, [key]: target.value }])
+        update_data(fatura.id, set_faturas, { [key]: target.value }, 500)
       }}
-      {...props}
+      {...flags}
     />
   )
 }
@@ -172,13 +156,27 @@ const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 
 const Day = Component.fs11.mono.ls1.div()
 const Scope = Component.uppercase.fs10.ls2.div()
-const Name = Component.fs20.w100p.ba0.text_center.ol_none.input()
-const Seller = Component.mono.grey3.fs12.w100p.ba0.text_center.ol_none.h_auto.h30.textarea()
-const Price = Component.order4.fs15.mono.ls1.w100p.ba0.text_center.ol_none.input()
+const Name = Component.fs20.w100p.ba0.ol_none.input()
+const Seller = Component.mono.grey3.fs12.w100p.ba0.ol_none.h_auto.textarea()
+const Price = Component.order4.fs15.mono.ls1.w100p.ba0.ol_none.input()
 
 const Placeholders = array(5).map((e) => <Div key={e} w15p />)
 const categories = ['pending', 'unregistered', 'registered']
 const modes = ['grid', 'rows']
-const inputs = { name: Name, seller: Seller, price: Price }
+
+const inputs = {
+  name: {
+    component: Name,
+    classes: { grid: ['order2', 'fs22', 'mt20'], rows: ['order1', 'flex1'] },
+  },
+  seller: {
+    component: Seller,
+    classes: {
+      grid: ['order3', 'mb20', 'mt10', 'h30'],
+      rows: ['order2', 'flex2', 'h20'],
+    },
+  },
+  price: { component: Price, classes: { grid: ['mb20'], rows: ['flex1'] } },
+}
 
 export default App

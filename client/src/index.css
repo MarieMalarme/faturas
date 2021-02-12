@@ -8,3 +8,8 @@
 textarea {
   resize: none;
 }
+
+::selection {
+  background: var(--sapphire3);
+  color: white;
+}
