@@ -29,14 +29,16 @@ export const send_data = (method, path, set_data, data) =>
     .then((res) => res.json())
     .then((res) => set_data(res))
 
-export const update_data = (id, set_data, updated_value) => {
-  console.log('ici')
-  send_data('put', `faturas/${id}`, set_data, updated_value)
+let is_editing
+export const update_data = (id, set_data, updated_value, timer) => {
+  clearTimeout(is_editing)
+  is_editing = setTimeout(() => {
+    send_data('put', `faturas/${id}`, set_data, updated_value)
+  }, timer || 1000)
 }
 
-export const delete_data = (id, set_data) => {
+export const delete_data = (id, set_data) =>
   send_data('delete', `faturas/${id}`, set_data)
-}
 
 export const array = (length) => [...Array(length).keys()]
 export const add0 = (number) => number.toString().padStart(2, '0')

@@ -65,6 +65,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
           <Fatura
             key={fatura.id}
             fatura={fatura}
+            faturas={faturas}
             set_faturas={set_faturas}
             mode={mode}
           />
@@ -75,7 +76,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
   )
 }
 
-const Fatura = ({ fatura, set_faturas, mode }) => {
+const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
   const { name, seller, price, timestamp, scope, registered, id } = fatura
   const grid = mode === 'grid'
   const rows = mode === 'rows'
@@ -94,9 +95,18 @@ const Fatura = ({ fatura, set_faturas, mode }) => {
         </Day>
         <Scope flex1={rows}>{scope}</Scope>
       </Infos>
-      <Name order2={grid} fs22={grid} mt20={grid} order1={rows} flex1={rows}>
-        {name}
-      </Name>
+      <Input
+        type="name"
+        order2={grid}
+        fs22={grid}
+        mt20={grid}
+        order1={rows}
+        flex1={rows}
+        value={name}
+        fatura={fatura}
+        faturas={faturas}
+        set_faturas={set_faturas}
+      />
       <Seller order3={grid} mb30={grid} mt10={grid} order2={rows} flex1={rows}>
         {seller}
       </Seller>
@@ -105,6 +115,21 @@ const Fatura = ({ fatura, set_faturas, mode }) => {
       </Price>
       <Registration registered={registered} id={id} set_faturas={set_faturas} />
     </Container>
+  )
+}
+
+const Input = ({ type, fatura, faturas, set_faturas, ...props }) => {
+  const Component = inputs[type]
+  const other_faturas = faturas.filter((f) => f.id !== fatura.id)
+
+  return (
+    <Component
+      onChange={({ target }) => {
+        set_faturas([...other_faturas, { ...fatura, name: target.value }])
+        update_data(fatura.id, set_faturas, { [type]: target.value }, 500)
+      }}
+      {...props}
+    />
   )
 }
 
@@ -132,12 +157,13 @@ const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 
 const Day = Component.fs11.mono.ls1.div()
 const Scope = Component.uppercase.fs10.ls2.div()
-const Name = Component.fs20.div()
+const Name = Component.fs20.w100p.ba0.text_center.ol_none.input()
 const Seller = Component.mono.grey3.fs12.div()
 const Price = Component.order4.fs15.mono.ls1.div()
 
 const Placeholders = array(5).map((e) => <Div key={e} w15p />)
 const categories = ['pending', 'unregistered', 'registered']
 const modes = ['grid', 'rows']
+const inputs = { name: Name }
 
 export default App
