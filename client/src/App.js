@@ -77,7 +77,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
 }
 
 const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
-  const { name, seller, price, timestamp, scope, registered, id } = fatura
+  const { price, timestamp, scope, registered, id } = fatura
   const grid = mode === 'grid'
   const rows = mode === 'rows'
 
@@ -102,14 +102,21 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
         mt20={grid}
         order1={rows}
         flex1={rows}
-        value={name}
         fatura={fatura}
         faturas={faturas}
         set_faturas={set_faturas}
       />
-      <Seller order3={grid} mb30={grid} mt10={grid} order2={rows} flex1={rows}>
-        {seller}
-      </Seller>
+      <Input
+        type="seller"
+        order3={grid}
+        mb20={grid}
+        mt10={grid}
+        order2={rows}
+        flex1={rows}
+        fatura={fatura}
+        faturas={faturas}
+        set_faturas={set_faturas}
+      />
       <Price mb20={grid} flex1={rows}>
         {price}
       </Price>
@@ -124,8 +131,10 @@ const Input = ({ type, fatura, faturas, set_faturas, ...props }) => {
 
   return (
     <Component
+      spellcheck="false"
+      value={fatura[type]}
       onChange={({ target }) => {
-        set_faturas([...other_faturas, { ...fatura, name: target.value }])
+        set_faturas([...other_faturas, { ...fatura, [type]: target.value }])
         update_data(fatura.id, set_faturas, { [type]: target.value }, 500)
       }}
       {...props}
@@ -158,12 +167,12 @@ const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 const Day = Component.fs11.mono.ls1.div()
 const Scope = Component.uppercase.fs10.ls2.div()
 const Name = Component.fs20.w100p.ba0.text_center.ol_none.input()
-const Seller = Component.mono.grey3.fs12.div()
+const Seller = Component.mono.grey3.fs12.w100p.ba0.text_center.ol_none.h_auto.h30.textarea()
 const Price = Component.order4.fs15.mono.ls1.div()
 
 const Placeholders = array(5).map((e) => <Div key={e} w15p />)
 const categories = ['pending', 'unregistered', 'registered']
 const modes = ['grid', 'rows']
-const inputs = { name: Name }
+const inputs = { name: Name, seller: Seller }
 
 export default App
