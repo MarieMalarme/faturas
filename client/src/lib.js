@@ -5,6 +5,7 @@ atomizify({
     mono: `font-family: 'IBM Plex Mono'`,
     h1: 'height: 1px',
     mr_auto: 'margin-right: auto',
+    w_fit_content: 'width: fit-content',
   },
 })
 
@@ -40,5 +41,10 @@ export const update_data = (id, set_data, updated_value, timer) => {
 export const delete_data = (id, set_data) =>
   send_data('delete', `faturas/${id}`, set_data)
 
+export const get_today_date = () => {
+  const today = new Date()
+  const date = today.toISOString().slice(0, 10)
+  return date
+}
+
 export const array = (length) => [...Array(length).keys()]
-export const add0 = (number) => number.toString().padStart(2, '0')

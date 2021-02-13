@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
-import { Component, Div, fetch_data, update_data, array, add0 } from './lib.js'
 import { Icon } from './icons.js'
+import {
+  Component,
+  Div,
+  fetch_data,
+  update_data,
+  array,
+  get_today_date,
+} from './lib.js'
 
 const App = () => {
   const [mode, set_mode] = useState('grid')
@@ -61,6 +68,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
         {category}
       </Section>
       <Faturas>
+        <NewFatura mode={mode} />
         {filtered_faturas.map((fatura, i) => (
           <Fatura
             key={fatura.id}
@@ -76,8 +84,34 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
   )
 }
 
-const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
-  const { date, scope, registered, id } = fatura
+const NewFatura = ({ mode }) => {
+  const grid = mode === 'grid'
+  const rows = mode === 'rows'
+  const Container = (grid && Card) || (rows && Row)
+  return (
+    <Container
+      w_fit_content={rows}
+      c_pointer
+      b_sapphire2
+      sapphire2={grid}
+      sapphire4={rows}
+      bb0={rows}
+      fs50={grid}
+      jc_center={grid}
+    >
+      +{rows && <Add>New fatura</Add>}
+    </Container>
+  )
+}
+
+const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
+  const {
+    date = get_today_date(),
+    scope = 'perso',
+    registered = category === 'registered',
+    id,
+  } = fatura
+
   const grid = mode === 'grid'
   const rows = mode === 'rows'
   const perso = scope === 'perso'
@@ -91,6 +125,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
           <Day
             value={date}
             type="date"
+            o30={!fatura.date}
             onChange={({ target }) =>
               update_data(id, set_faturas, { date: target.value }, 0)
             }
@@ -112,6 +147,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
       </Infos>
       {Object.entries(inputs).map((input) => (
         <Input
+          key={input[0]}
           input={input}
           mode={mode}
           fatura={fatura}
@@ -125,7 +161,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
 }
 
 const Input = ({ input, mode, fatura, faturas, set_faturas }) => {
-  const [key, { component, classes }] = input
+  const [key, { component, placeholder, classes }] = input
   const Component = component
   const other_faturas = faturas.filter((f) => f.id !== fatura.id)
   const flags = Object.assign(
@@ -135,9 +171,10 @@ const Input = ({ input, mode, fatura, faturas, set_faturas }) => {
 
   return (
     <Component
-      spellcheck="false"
+      spellCheck="false"
       value={fatura[key]}
       text_center={mode === 'grid'}
+      placeholder={placeholder}
       onChange={({ target }) => {
         set_faturas([...other_faturas, { ...fatura, [key]: target.value }])
         update_data(fatura.id, set_faturas, { [key]: target.value }, 500)
@@ -168,6 +205,7 @@ const Row = Component.flex.ai_baseline.bb.b_grey2.pv20.div()
 const Grid = Component.mt50.flex.flex_wrap.jc_between.div()
 const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb25.b_grey2.flex.flex_column.div()
 const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
+const Add = Component.ml15.fs12.uppercase.mono.ls1.div()
 
 const DatePicker = Component.relative.div()
 const Day = Component.fs11.mono.ls1.ba0.ol_none.pa0.w50.input()
@@ -185,16 +223,22 @@ const modes = ['grid', 'rows']
 const inputs = {
   name: {
     component: Name,
+    placeholder: 'Groceries',
     classes: { grid: ['order2', 'fs22', 'mt20'], rows: ['order1', 'flex1'] },
   },
   seller: {
     component: Seller,
+    placeholder: 'Glovo',
     classes: {
       grid: ['order3', 'mb20', 'mt10', 'h30'],
       rows: ['order2', 'flex2', 'h20'],
     },
   },
-  price: { component: Price, classes: { grid: ['mb20'], rows: ['flex1'] } },
+  price: {
+    component: Price,
+    placeholder: '19.99',
+    classes: { grid: ['mb20'], rows: ['flex1'] },
+  },
 }
 
 export default App

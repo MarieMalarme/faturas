@@ -29,3 +29,7 @@ input[type='date'] {
 ::-webkit-datetime-edit-year-field {
   display: none;
 }
+
+::placeholder {
+  opacity: 0.3;
+}
