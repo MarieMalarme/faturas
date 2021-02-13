@@ -80,6 +80,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
   const { date, scope, registered, id } = fatura
   const grid = mode === 'grid'
   const rows = mode === 'rows'
+  const perso = scope === 'perso'
 
   const Container = (grid && Card) || (rows && Row)
 
@@ -96,7 +97,18 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
           />
           <Hider style={{ top: '-3px', left: '42px' }} />
         </DatePicker>
-        <Scope flex1={rows}>{scope}</Scope>
+        <Scope
+          o30={perso}
+          flex1={rows}
+          onClick={() => {
+            const current_index = scopes.indexOf(scope)
+            const end_of_array = current_index === scopes.length - 1
+            const next_index = end_of_array ? 0 : current_index + 1
+            update_data(id, set_faturas, { scope: scopes[next_index] }, 10)
+          }}
+        >
+          {(perso && 'pro') || scope}
+        </Scope>
       </Infos>
       {Object.entries(inputs).map((input) => (
         <Input
@@ -167,6 +179,7 @@ const Price = Component.order4.fs15.mono.ls1.w100p.ba0.ol_none.input()
 
 const Placeholders = array(5).map((e) => <Div key={e} w15p />)
 const categories = ['pending', 'unregistered', 'registered']
+const scopes = ['pro', 'semi', 'perso']
 const modes = ['grid', 'rows']
 
 const inputs = {
