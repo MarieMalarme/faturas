@@ -19,13 +19,13 @@ input[type='date'] {
 }
 
 ::-webkit-calendar-picker-indicator {
-  filter: invert(0.55);
-  margin-left: -4px;
-  margin-top: 3px;
-  width: 10px;
-  transform: translateX(-55px);
+  cursor: pointer;
+  filter: opacity(0);
+  margin-left: 0px;
+  position: absolute;
+  width: 40px;
 }
 
-::-webkit-datetime-edit {
-  padding-left: 18px;
+::-webkit-datetime-edit-year-field {
+  display: none;
 }

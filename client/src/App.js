@@ -48,7 +48,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
         (registered_category && registered) ||
         (!registered && status === category),
     )
-    .sort((a, b) => a.date - b.date)
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
 
   return (
     <Container>
@@ -86,7 +86,16 @@ const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
   return (
     <Container>
       <Infos order1={grid} order3={rows} flex2={rows}>
-        <Day value={date} flex1={rows} type="date" />
+        <DatePicker flex1={rows}>
+          <Day
+            value={date}
+            type="date"
+            onChange={({ target }) =>
+              update_data(id, set_faturas, { date: target.value }, 0)
+            }
+          />
+          <Hider style={{ top: '-3px', left: '42px' }} />
+        </DatePicker>
         <Scope flex1={rows}>{scope}</Scope>
       </Infos>
       {Object.entries(inputs).map((input) => (
@@ -148,7 +157,9 @@ const Grid = Component.mt50.flex.flex_wrap.jc_between.div()
 const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb25.b_grey2.flex.flex_column.div()
 const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 
-const Day = Component.fs11.mono.ls1.ba0.ol_none.pa0.w70.input()
+const DatePicker = Component.relative.div()
+const Day = Component.fs11.mono.ls1.ba0.ol_none.pa0.w50.input()
+const Hider = Component.absolute.bg_white.w10.h20.div()
 const Scope = Component.uppercase.fs10.ls2.div()
 const Name = Component.fs20.w100p.ba0.ol_none.input()
 const Seller = Component.mono.grey3.fs12.w100p.ba0.ol_none.h_auto.textarea()
