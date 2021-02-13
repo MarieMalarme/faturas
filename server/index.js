@@ -59,9 +59,10 @@ const handle_data = (req, res, next) => {
         (deleting && kept) ||
         faturas
 
-      const json_data = JSON.stringify(faturas, null, 2)
+      const sorted_faturas = faturas.sort((a, b) => a.id - b.id)
+      const json_data = JSON.stringify(sorted_faturas, null, 2)
       await write_file(file_path, json_data, 'utf-8')
-      res.json(faturas)
+      res.json(sorted_faturas)
     })
     .catch(next)
 }
