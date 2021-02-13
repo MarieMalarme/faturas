@@ -1,77 +1,22 @@
 [
     {
-        "id": 1,
-        "name": "Armario",
-        "seller": "Conforama",
-        "price": "259.99",
-        "timestamp": 1611709752,
-        "updated_at": 1611709752,
+        "id": 7,
+        "name": "Pharmacy",
+        "seller": "Farmacia Santa Justa",
+        "price": "11.10",
+        "date": "2021-02-08",
+        "updated_at": 1612825646,
         "registered": false,
         "status": "pending",
-        "scope": "Pro"
-    },
-    {
-        "id": 2,
-        "name": "Lunch",
-        "seller": "Basag",
-        "price": "25.80",
-        "timestamp": 1612228152,
-        "updated_at": 1612228152,
-        "registered": false,
-        "status": "pending",
-        "scope": "Pro"
-    },
-    {
-        "id": 3,
-        "name": "Lunch",
-        "seller": "Sukothai",
-        "price": "14.95",
-        "timestamp": 1612314552,
-        "updated_at": 1612314552,
-        "registered": false,
-        "status": "pending",
-        "scope": "Pro"
-    },
-    {
-        "id": 4,
-        "name": "Lunch",
-        "seller": "Fruly",
-        "price": "26.88",
-        "timestamp": 1612400952,
-        "updated_at": 1612400952,
-        "registered": false,
-        "status": "pending",
-        "scope": "Pro"
-    },
-    {
-        "id": 5,
-        "name": "Setup",
-        "seller": "Yes Partner",
-        "price": "184.50",
-        "timestamp": 1612487352,
-        "updated_at": 1612487352,
-        "registered": false,
-        "status": "pending",
-        "scope": "Pro"
+        "scope": ""
     },
     {
         "id": 6,
         "name": "Groceries",
         "seller": "Mercado da Figueira",
         "price": "19.50",
-        "timestamp": 1612825415,
+        "date": "2021-02-08",
         "updated_at": 1612825415,
-        "registered": false,
-        "status": "pending",
-        "scope": ""
-    },
-    {
-        "id": 7,
-        "name": "Pharmacy",
-        "seller": "Farmacia Santa Justa",
-        "price": "11.10",
-        "timestamp": 1612825646,
-        "updated_at": 1612825646,
         "registered": false,
         "status": "pending",
         "scope": ""
@@ -81,7 +26,7 @@
         "name": "Pill",
         "seller": "Farmacia Rua Garrett",
         "price": "16.50",
-        "timestamp": 1612869100,
+        "date": "2021-02-09",
         "updated_at": 1612869100,
         "registered": false,
         "status": "unregistered",
@@ -92,10 +37,65 @@
         "name": "Groceries",
         "seller": "Amanhecer",
         "price": "43.26",
-        "timestamp": 1613041724,
+        "date": "2021-02-11",
         "updated_at": 1613041724,
         "registered": true,
         "status": "unregistered",
         "scope": ""
+    },
+    {
+        "id": 3,
+        "name": "Lunch",
+        "seller": "Sukothai",
+        "price": "14.95",
+        "date": "2021-02-03",
+        "updated_at": 1612314552,
+        "registered": false,
+        "status": "pending",
+        "scope": "Pro"
+    },
+    {
+        "id": 2,
+        "name": "Lunch",
+        "seller": "Basag",
+        "price": "25.80",
+        "date": "2021-02-02",
+        "updated_at": 1612228152,
+        "registered": false,
+        "status": "pending",
+        "scope": "Pro"
+    },
+    {
+        "id": 5,
+        "name": "Setup",
+        "seller": "Yes Partner",
+        "price": "184.50",
+        "date": "2021-02-05",
+        "updated_at": 1612487352,
+        "registered": true,
+        "status": "pending",
+        "scope": "Pro"
+    },
+    {
+        "id": 4,
+        "name": "Lunch",
+        "seller": "Fruly",
+        "price": "26.88",
+        "date": "2021-02-04",
+        "updated_at": 1612400952,
+        "registered": true,
+        "status": "pending",
+        "scope": "Pro"
+    },
+    {
+        "id": 1,
+        "name": "Armario",
+        "seller": "Conforama",
+        "price": "259.99",
+        "date": "2021-01-27",
+        "updated_at": 1611709752,
+        "registered": false,
+        "status": "pending",
+        "scope": "Pro"
     }
 ]

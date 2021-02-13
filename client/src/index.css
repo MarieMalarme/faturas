@@ -13,3 +13,19 @@ textarea {
   background: var(--sapphire3);
   color: white;
 }
+
+input[type='date'] {
+  margin-top: -3px;
+}
+
+::-webkit-calendar-picker-indicator {
+  filter: invert(0.55);
+  margin-left: -4px;
+  margin-top: 3px;
+  width: 10px;
+  transform: translateX(-55px);
+}
+
+::-webkit-datetime-edit {
+  padding-left: 18px;
+}

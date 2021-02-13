@@ -48,7 +48,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
         (registered_category && registered) ||
         (!registered && status === category),
     )
-    .sort((a, b) => a.timestamp - b.timestamp)
+    .sort((a, b) => a.date - b.date)
 
   return (
     <Container>
@@ -77,22 +77,16 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
 }
 
 const Fatura = ({ fatura, faturas, set_faturas, mode }) => {
-  const { timestamp, scope, registered, id } = fatura
+  const { date, scope, registered, id } = fatura
   const grid = mode === 'grid'
   const rows = mode === 'rows'
-
-  const date = new Date(timestamp * 1000)
-  const day = add0(date.getDate())
-  const month = add0(date.getMonth() + 1)
 
   const Container = (grid && Card) || (rows && Row)
 
   return (
     <Container>
       <Infos order1={grid} order3={rows} flex2={rows}>
-        <Day flex1={rows}>
-          {day}.{month}
-        </Day>
+        <Day value={date} flex1={rows} type="date" />
         <Scope flex1={rows}>{scope}</Scope>
       </Infos>
       {Object.entries(inputs).map((input) => (
@@ -154,7 +148,7 @@ const Grid = Component.mt50.flex.flex_wrap.jc_between.div()
 const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb25.b_grey2.flex.flex_column.div()
 const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 
-const Day = Component.fs11.mono.ls1.div()
+const Day = Component.fs11.mono.ls1.ba0.ol_none.pa0.w70.input()
 const Scope = Component.uppercase.fs10.ls2.div()
 const Name = Component.fs20.w100p.ba0.ol_none.input()
 const Seller = Component.mono.grey3.fs12.w100p.ba0.ol_none.h_auto.textarea()
