@@ -69,12 +69,6 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
         {category}
       </Section>
       <Faturas>
-        <NewFatura
-          category={category}
-          mode={mode}
-          faturas={faturas}
-          set_faturas={set_faturas}
-        />
         {filtered_faturas.map((fatura, i) => (
           <Fatura
             key={fatura.id}
@@ -84,6 +78,12 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
             mode={mode}
           />
         ))}
+        <NewFatura
+          category={category}
+          mode={mode}
+          faturas={faturas}
+          set_faturas={set_faturas}
+        />
         {Placeholders}
       </Faturas>
     </Container>
@@ -101,6 +101,7 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
       b_sapphire2
       bb0={rows}
       fs50={grid}
+      mt20={rows}
       sapphire2={grid}
       sapphire4={rows}
       jc_center={grid}
@@ -213,19 +214,19 @@ const Title = Component.fs60.grey6.mono.div()
 const Modes = Component.as_center.flex.w50.ai_center.jc_between.ml60.mt30.mr_auto.div()
 const Link = Component.text_dec_none.grey6.bb.b_grey2.a()
 const Section = Component.fs18.mb25.pv10.uppercase.mono.ls2.bb.div()
-const Button = Component.order5.ba.hover_bg_grey1.w110.text_center.b_rad20.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
+const Button = Component.order5.ba.hover_b_grey3.anim_border.w110.text_center.b_rad20.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
 
 const Container = Component.mt100.div()
 const Row = Component.flex.ai_baseline.bb.b_grey2.pv20.div()
 const Grid = Component.mt50.flex.flex_wrap.jc_between.div()
-const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb25.b_grey2.flex.flex_column.div()
+const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb25.b_grey2.flex.flex_column.min_h230.div()
 const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 const Add = Component.ml15.fs12.uppercase.mono.ls1.div()
 
 const DatePicker = Component.relative.div()
 const Day = Component.fs11.mono.ls1.ba0.ol_none.pa0.w50.input()
 const Hider = Component.absolute.bg_white.w10.h20.div()
-const Scope = Component.uppercase.fs10.ls2.div()
+const Scope = Component.uppercase.fs10.ls2.c_pointer.div()
 const Name = Component.fs20.w100p.ba0.ol_none.input()
 const Seller = Component.mono.grey3.fs12.w100p.ba0.ol_none.h_auto.textarea()
 const Price = Component.order4.fs15.mono.ls1.w100p.ba0.ol_none.input()
