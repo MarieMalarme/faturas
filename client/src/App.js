@@ -9,11 +9,18 @@ import {
   delete_data,
   array,
   get_today_date,
+  get_total_amount,
+  get_pro_amount,
 } from './lib.js'
 
 const App = () => {
   const [mode, set_mode] = useState('grid')
   const [faturas, set_faturas] = useState([])
+
+  const metrics = {
+    total: get_total_amount(faturas),
+    professional: get_pro_amount(faturas),
+  }
 
   useEffect(() => {
     fetch_data('faturas', set_faturas)
@@ -35,6 +42,11 @@ const App = () => {
           Portal das Finanças
         </Link>
       </Header>
+      <Metrics>
+        {Object.entries(metrics).map(([caption, metric]) => (
+          <Metric caption={caption} metric={metric} />
+        ))}
+      </Metrics>
       {categories.map((category, i) => (
         <Category
           key={category}
@@ -48,6 +60,13 @@ const App = () => {
   )
 }
 
+const Metric = ({ caption, metric }) => (
+  <Div mr100>
+    <Caption>{caption}</Caption>
+    <Data>{metric}</Data>
+  </Div>
+)
+
 const Category = ({ faturas, set_faturas, category, mode }) => {
   const Faturas = (mode === 'grid' && Grid) || Div
   const registered_category = category === 'registered'
@@ -57,7 +76,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
         (registered_category && registered) ||
         (!registered && status === category),
     )
-    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
 
   return (
     <Container>
@@ -99,12 +118,10 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
   return (
     <Container
       c_pointer
-      b_sapphire2
       bb0={rows}
       fs50={grid}
       mt20={rows}
-      sapphire2={grid}
-      sapphire4={rows}
+      grey5={grid}
       jc_center={grid}
       w_fit_content={rows}
       onClick={() => {
@@ -112,7 +129,9 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
         const created_at = new Date()
         const registered = category === 'registered'
         const status = !registered ? category : 'unregistered'
-        const new_fatura = { id, created_at, status, registered }
+        const date = get_today_date()
+        const scope = 'perso'
+        const new_fatura = { id, created_at, date, status, registered, scope }
         send_data('post', 'faturas', set_faturas, new_fatura)
       }}
     >
@@ -123,14 +142,7 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
 
 const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
   const [display, set_display] = useState(false)
-
-  const {
-    date = get_today_date(),
-    scope = 'perso',
-    registered = category === 'registered',
-    id,
-  } = fatura
-
+  const { date, scope, registered, id } = fatura
   const grid = mode === 'grid'
   const rows = mode === 'rows'
   const perso = scope === 'perso'
@@ -158,9 +170,8 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
           <Day
             value={date}
             type="date"
-            o30={!fatura.date}
             onChange={({ target }) =>
-              update_data(id, set_faturas, { date: target.value }, 0)
+              update_data(id, set_faturas, { date: target.value })
             }
           />
           <Hider style={{ top: '-3px', left: '42px' }} />
@@ -172,7 +183,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
             const current_index = scopes.indexOf(scope)
             const end_of_array = current_index === scopes.length - 1
             const next_index = end_of_array ? 0 : current_index + 1
-            update_data(id, set_faturas, { scope: scopes[next_index] }, 10)
+            update_data(id, set_faturas, { scope: scopes[next_index] })
           }}
         >
           {(perso && 'pro') || scope}
@@ -238,6 +249,10 @@ const Modes = Component.as_center.flex.w50.ai_center.jc_between.ml60.mt30.mr_aut
 const Link = Component.text_dec_none.grey6.bb.b_grey2.a()
 const Section = Component.fs18.mb25.pv10.uppercase.mono.ls2.bb.div()
 const Button = Component.order5.ba.hover_b_grey3.anim_border.w110.text_center.b_rad20.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
+
+const Metrics = Component.mt90.flex.div()
+const Caption = Component.capitalize.mb10.mono.fs13.div()
+const Data = Component.fs50.mono.grey6.div()
 
 const Container = Component.mt100.div()
 const Row = Component.flex.ai_baseline.bb.b_grey2.pv20.div()

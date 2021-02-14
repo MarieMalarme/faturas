@@ -11,6 +11,21 @@ atomizify({
 
 export const { Component, Div } = flagify()
 
+export const get_total_amount = (faturas) =>
+  faturas.reduce((acc, fatura) => {
+    const amount = Number(fatura.price) || 0
+    return (acc = acc + amount)
+  }, 0)
+
+export const get_pro_amount = (faturas) =>
+  faturas
+    .filter((fatura) => fatura.scope !== 'perso')
+    .reduce((acc, fatura) => {
+      const number = Number(fatura.price) || 0
+      const amount = (fatura.scope === 'semi' && number * 0.25) || number
+      return (acc = acc + amount)
+    }, 0)
+
 export const fetch_data = async (path, set_data) => {
   const response = await fetch(`http://localhost:5000/${path}`)
   const data = await response.json()
@@ -38,7 +53,7 @@ export const update_data = (id, set_data, updated_value, timer) => {
       ...updated_value,
       updated_at: new Date(),
     })
-  }, timer || 1000)
+  }, timer || 0)
 }
 
 export const delete_data = (id, set_data) =>
