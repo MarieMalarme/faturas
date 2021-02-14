@@ -6,6 +6,7 @@ import {
   fetch_data,
   send_data,
   update_data,
+  delete_data,
   array,
   get_today_date,
 } from './lib.js'
@@ -121,6 +122,8 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
 }
 
 const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
+  const [display, set_display] = useState(false)
+
   const {
     date = get_today_date(),
     scope = 'perso',
@@ -135,7 +138,21 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
   const Container = (grid && Card) || (rows && Row)
 
   return (
-    <Container>
+    <Container
+      onMouseOver={() => set_display(true)}
+      onMouseLeave={() => set_display(false)}
+      relative
+    >
+      <Delete
+        b0={grid}
+        pb10={grid}
+        pv10={rows}
+        o100={display}
+        style={{ left: rows && '-70px', top: rows && '12px' }}
+        onClick={() => delete_data(id, set_faturas)}
+      >
+        ×
+      </Delete>
       <Infos order1={grid} order3={rows} flex2={rows}>
         <DatePicker flex1={rows}>
           <Day
@@ -171,7 +188,12 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
           set_faturas={set_faturas}
         />
       ))}
-      <Registration registered={registered} id={id} set_faturas={set_faturas} />
+      <Registration
+        id={id}
+        mb10={grid}
+        registered={registered}
+        set_faturas={set_faturas}
+      />
     </Container>
   )
 }
@@ -200,9 +222,10 @@ const Input = ({ input, mode, fatura, faturas, set_faturas }) => {
   )
 }
 
-const Registration = ({ id, registered, set_faturas }) => (
+const Registration = ({ id, registered, set_faturas, ...props }) => (
   <Button
     onClick={() => update_data(id, set_faturas, { registered: !registered })}
+    {...props}
   >
     {registered && 'un'}register
   </Button>
@@ -219,9 +242,10 @@ const Button = Component.order5.ba.hover_b_grey3.anim_border.w110.text_center.b_
 const Container = Component.mt100.div()
 const Row = Component.flex.ai_baseline.bb.b_grey2.pv20.div()
 const Grid = Component.mt50.flex.flex_wrap.jc_between.div()
-const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb25.b_grey2.flex.flex_column.min_h230.div()
+const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb35.b_grey2.flex.flex_column.min_h240.div()
 const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 const Add = Component.ml15.fs12.uppercase.mono.ls1.div()
+const Delete = Component.o0.anim_opacity.grey5.ph30.c_pointer.absolute.div()
 
 const DatePicker = Component.relative.div()
 const Day = Component.fs11.mono.ls1.ba0.ol_none.pa0.w50.input()
