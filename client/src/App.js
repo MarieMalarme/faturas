@@ -16,6 +16,8 @@ import {
 const App = () => {
   const [mode, set_mode] = useState('grid')
   const [faturas, set_faturas] = useState([])
+  const [invoiced, set_invoiced] = useState(5500)
+  const goal = invoiced * 0.15
 
   const metrics = {
     total: get_total_amount(faturas),
@@ -46,6 +48,13 @@ const App = () => {
         {Object.entries(metrics).map(([caption, metric]) => (
           <Metric caption={caption} metric={metric} />
         ))}
+        <Graph metrics={metrics} invoiced={invoiced} goal={goal} />
+        <Amounts
+          invoiced={invoiced}
+          set_invoiced={set_invoiced}
+          metrics={metrics}
+          goal={goal}
+        />
       </Metrics>
       {categories.map((category, i) => (
         <Category
@@ -64,6 +73,36 @@ const Metric = ({ caption, metric }) => (
   <Div mr100>
     <Caption>{caption}</Caption>
     <Data>{metric}</Data>
+  </Div>
+)
+
+const Graph = ({ metrics, invoiced, goal }) => {
+  const current_amount = metrics.professional
+  const percentage = current_amount / goal
+
+  return (
+    <Div mt25 w200 h4 bg_grey1>
+      <Div h4 bg_sapphire2 style={{ width: `${percentage * 100}%` }} />
+    </Div>
+  )
+}
+
+const Amounts = ({ invoiced, set_invoiced, metrics, goal }) => (
+  <Div ml100>
+    <Caption grey6 flex ai_center>
+      Invoiced{' '}
+      <Invoiced
+        type="text"
+        value={invoiced}
+        onChange={({ target }) => set_invoiced(target.value)}
+      />
+    </Caption>
+    <Caption grey6>
+      Goal<Amount>{goal}</Amount>
+    </Caption>
+    <Caption grey6>
+      Remaining<Amount>{goal - metrics.professional}</Amount>
+    </Caption>
   </Div>
 )
 
@@ -250,9 +289,11 @@ const Link = Component.text_dec_none.grey6.bb.b_grey2.a()
 const Section = Component.fs18.mb25.pv10.uppercase.mono.ls2.bb.div()
 const Button = Component.order5.ba.hover_b_grey3.anim_border.w110.text_center.b_rad20.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
 
-const Metrics = Component.mt90.flex.div()
+const Metrics = Component.mt90.flex.ai_center.div()
 const Caption = Component.capitalize.mb10.mono.fs13.div()
 const Data = Component.fs50.mono.grey6.div()
+const Invoiced = Component.ml15.ba0.bb.pa0.input()
+const Amount = Component.ml15.black.span()
 
 const Container = Component.mt100.div()
 const Row = Component.flex.ai_baseline.bb.b_grey2.pv20.div()
