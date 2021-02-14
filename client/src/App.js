@@ -16,8 +16,8 @@ import {
 const App = () => {
   const [mode, set_mode] = useState('grid')
   const [faturas, set_faturas] = useState([])
-  const [invoiced, set_invoiced] = useState(5500)
-  const goal = invoiced * 0.15
+  const [invoiced, set_invoiced] = useState({ amount: null })
+  const goal = invoiced.amount * 0.15
 
   const metrics = {
     total: get_total_amount(faturas),
@@ -27,6 +27,10 @@ const App = () => {
   useEffect(() => {
     fetch_data('faturas', set_faturas)
   }, [faturas.length, set_faturas])
+
+  useEffect(() => {
+    fetch_data('faturas/invoiced', set_invoiced)
+  }, [invoiced.amount])
 
   return (
     <Page>
@@ -46,9 +50,9 @@ const App = () => {
       </Header>
       <Metrics>
         {Object.entries(metrics).map(([caption, metric]) => (
-          <Metric caption={caption} metric={metric} />
+          <Metric key={caption} caption={caption} metric={metric} />
         ))}
-        <Graph metrics={metrics} invoiced={invoiced} goal={goal} />
+        <Graph metrics={metrics} goal={goal} />
         <Amounts
           invoiced={invoiced}
           set_invoiced={set_invoiced}
@@ -76,7 +80,7 @@ const Metric = ({ caption, metric }) => (
   </Div>
 )
 
-const Graph = ({ metrics, invoiced, goal }) => {
+const Graph = ({ metrics, goal }) => {
   const current_amount = metrics.professional
   const percentage = current_amount / goal
 
@@ -87,24 +91,31 @@ const Graph = ({ metrics, invoiced, goal }) => {
   )
 }
 
-const Amounts = ({ invoiced, set_invoiced, metrics, goal }) => (
-  <Div ml100>
-    <Caption grey6 flex ai_center>
-      Invoiced{' '}
-      <Invoiced
-        type="text"
-        value={invoiced}
-        onChange={({ target }) => set_invoiced(target.value)}
-      />
-    </Caption>
-    <Caption grey6>
-      Goal<Amount>{goal}</Amount>
-    </Caption>
-    <Caption grey6>
-      Remaining<Amount>{goal - metrics.professional}</Amount>
-    </Caption>
-  </Div>
-)
+const Amounts = ({ invoiced, set_invoiced, metrics, goal }) => {
+  if (invoiced.amount === null) return 'loading'
+  const remaining = goal - metrics.professional
+
+  return (
+    <Div ml100>
+      <Caption grey6 flex ai_center>
+        Invoiced
+        <Invoiced
+          type="text"
+          defaultValue={invoiced.amount}
+          onChange={({ target }) => {
+            update_data('invoiced', set_invoiced, { amount: target.value }, 500)
+          }}
+        />
+      </Caption>
+      <Caption grey6>
+        Goal<Amount>{goal}</Amount>
+      </Caption>
+      <Caption grey6>
+        Remaining<Amount>{remaining > 0 ? remaining : 0}</Amount>
+      </Caption>
+    </Div>
+  )
+}
 
 const Category = ({ faturas, set_faturas, category, mode }) => {
   const Faturas = (mode === 'grid' && Grid) || Div
@@ -260,7 +271,7 @@ const Input = ({ input, mode, fatura, faturas, set_faturas }) => {
   return (
     <Component
       spellCheck="false"
-      value={fatura[key]}
+      defaultValue={fatura[key]}
       text_center={mode === 'grid'}
       placeholder={placeholder}
       onChange={({ target }) => {

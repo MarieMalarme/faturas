@@ -44,7 +44,9 @@ export const send_data = (method, path, set_data, data) =>
     body: JSON.stringify(data),
   })
     .then((res) => res.json())
-    .then((res) => set_data(res))
+    .then((res) => {
+      set_data(path.includes('invoiced') ? JSON.parse(res) : res)
+    })
 
 let is_editing
 export const update_data = (id, set_data, updated_value, timer) => {
