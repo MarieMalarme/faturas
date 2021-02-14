@@ -107,10 +107,10 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
       w_fit_content={rows}
       onClick={() => {
         const id = faturas.length + 1
-        const updated_at = new Date()
+        const created_at = new Date()
         const registered = category === 'registered'
         const status = !registered ? category : 'unregistered'
-        const new_fatura = { id, updated_at, status, registered }
+        const new_fatura = { id, created_at, status, registered }
         send_data('post', 'faturas', set_faturas, new_fatura)
       }}
     >

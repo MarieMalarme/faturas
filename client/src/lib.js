@@ -34,7 +34,10 @@ let is_editing
 export const update_data = (id, set_data, updated_value, timer) => {
   clearTimeout(is_editing)
   is_editing = setTimeout(() => {
-    send_data('put', `faturas/${id}`, set_data, updated_value)
+    send_data('put', `faturas/${id}`, set_data, {
+      ...updated_value,
+      updated_at: new Date(),
+    })
   }, timer || 1000)
 }
 
