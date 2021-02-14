@@ -4,6 +4,7 @@ import {
   Component,
   Div,
   fetch_data,
+  send_data,
   update_data,
   array,
   get_today_date,
@@ -68,7 +69,12 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
         {category}
       </Section>
       <Faturas>
-        <NewFatura mode={mode} />
+        <NewFatura
+          category={category}
+          mode={mode}
+          faturas={faturas}
+          set_faturas={set_faturas}
+        />
         {filtered_faturas.map((fatura, i) => (
           <Fatura
             key={fatura.id}
@@ -84,20 +90,29 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
   )
 }
 
-const NewFatura = ({ mode }) => {
+const NewFatura = ({ category, mode, faturas, set_faturas }) => {
   const grid = mode === 'grid'
   const rows = mode === 'rows'
   const Container = (grid && Card) || (rows && Row)
+
   return (
     <Container
-      w_fit_content={rows}
       c_pointer
       b_sapphire2
-      sapphire2={grid}
-      sapphire4={rows}
       bb0={rows}
       fs50={grid}
+      sapphire2={grid}
+      sapphire4={rows}
       jc_center={grid}
+      w_fit_content={rows}
+      onClick={() => {
+        const id = faturas.length + 1
+        const updated_at = new Date()
+        const registered = category === 'registered'
+        const status = !registered ? category : 'unregistered'
+        const new_fatura = { id, updated_at, status, registered }
+        send_data('post', 'faturas', set_faturas, new_fatura)
+      }}
     >
       +{rows && <Add>New fatura</Add>}
     </Container>
