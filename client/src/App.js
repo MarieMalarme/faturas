@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Icon } from './icons.js'
+import { Metrics } from './Metrics.js'
 import {
   Component,
   Div,
@@ -9,28 +10,15 @@ import {
   delete_data,
   array,
   get_today_date,
-  get_total_amount,
-  get_pro_amount,
 } from './lib.js'
 
 const App = () => {
   const [mode, set_mode] = useState('grid')
   const [faturas, set_faturas] = useState([])
-  const [invoiced, set_invoiced] = useState({ amount: null })
-  const goal = invoiced.amount * 0.15
-
-  const metrics = {
-    total: get_total_amount(faturas),
-    professional: get_pro_amount(faturas),
-  }
 
   useEffect(() => {
     fetch_data('faturas', set_faturas)
   }, [faturas.length, set_faturas])
-
-  useEffect(() => {
-    fetch_data('faturas/invoiced', set_invoiced)
-  }, [invoiced.amount])
 
   return (
     <Page>
@@ -48,18 +36,7 @@ const App = () => {
           Portal das Finanças
         </Link>
       </Header>
-      <Metrics>
-        {Object.entries(metrics).map(([caption, metric]) => (
-          <Metric key={caption} caption={caption} metric={metric} />
-        ))}
-        <Graph metrics={metrics} goal={goal} />
-        <Amounts
-          invoiced={invoiced}
-          set_invoiced={set_invoiced}
-          metrics={metrics}
-          goal={goal}
-        />
-      </Metrics>
+      <Metrics faturas={faturas} />
       {categories.map((category, i) => (
         <Category
           key={category}
@@ -73,50 +50,6 @@ const App = () => {
   )
 }
 
-const Metric = ({ caption, metric }) => (
-  <Div mr100>
-    <Caption>{caption}</Caption>
-    <Data>{metric}</Data>
-  </Div>
-)
-
-const Graph = ({ metrics, goal }) => {
-  const current_amount = metrics.professional
-  const percentage = current_amount / goal
-
-  return (
-    <Div mt25 w200 h4 bg_grey1>
-      <Div h4 bg_sapphire2 style={{ width: `${percentage * 100}%` }} />
-    </Div>
-  )
-}
-
-const Amounts = ({ invoiced, set_invoiced, metrics, goal }) => {
-  if (invoiced.amount === null) return 'loading'
-  const remaining = goal - metrics.professional
-
-  return (
-    <Div ml100>
-      <Caption grey6 flex ai_center>
-        Invoiced
-        <Invoiced
-          type="text"
-          defaultValue={invoiced.amount}
-          onChange={({ target }) => {
-            update_data('invoiced', set_invoiced, { amount: target.value }, 500)
-          }}
-        />
-      </Caption>
-      <Caption grey6>
-        Goal<Amount>{goal}</Amount>
-      </Caption>
-      <Caption grey6>
-        Remaining<Amount>{remaining > 0 ? remaining : 0}</Amount>
-      </Caption>
-    </Div>
-  )
-}
-
 const Category = ({ faturas, set_faturas, category, mode }) => {
   const Faturas = (mode === 'grid' && Grid) || Div
   const registered_category = category === 'registered'
@@ -126,7 +59,7 @@ const Category = ({ faturas, set_faturas, category, mode }) => {
         (registered_category && registered) ||
         (!registered && status === category),
     )
-    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
 
   return (
     <Container>
@@ -221,7 +154,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
             value={date}
             type="date"
             onChange={({ target }) =>
-              update_data(id, set_faturas, { date: target.value })
+              update_data(`faturas/${id}`, set_faturas, { date: target.value })
             }
           />
           <Hider style={{ top: '-3px', left: '42px' }} />
@@ -233,7 +166,9 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
             const current_index = scopes.indexOf(scope)
             const end_of_array = current_index === scopes.length - 1
             const next_index = end_of_array ? 0 : current_index + 1
-            update_data(id, set_faturas, { scope: scopes[next_index] })
+            update_data(`faturas/${id}`, set_faturas, {
+              scope: scopes[next_index],
+            })
           }}
         >
           {(perso && 'pro') || scope}
@@ -244,9 +179,9 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
           key={input[0]}
           input={input}
           mode={mode}
-          fatura={fatura}
-          faturas={faturas}
-          set_faturas={set_faturas}
+          data={fatura}
+          datas={faturas}
+          set_datas={set_faturas}
         />
       ))}
       <Registration
@@ -259,24 +194,28 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
   )
 }
 
-const Input = ({ input, mode, fatura, faturas, set_faturas }) => {
+export const Input = ({ input, mode, data, datas, set_datas }) => {
   const [key, { component, placeholder, classes }] = input
   const Component = component
-  const other_faturas = faturas.filter((f) => f.id !== fatura.id)
-  const flags = Object.assign(
-    {},
-    ...classes[mode].map((classe) => ({ [classe]: true })),
-  )
+  const other_datas = datas.filter((f) => f.id !== data.id)
+  const flags =
+    mode &&
+    Object.assign({}, ...classes[mode].map((classe) => ({ [classe]: true })))
 
   return (
     <Component
       spellCheck="false"
-      defaultValue={fatura[key]}
+      defaultValue={data[key]}
       text_center={mode === 'grid'}
       placeholder={placeholder}
       onChange={({ target }) => {
-        set_faturas([...other_faturas, { ...fatura, [key]: target.value }])
-        update_data(fatura.id, set_faturas, { [key]: target.value }, 500)
+        set_datas([...other_datas, { ...data, [key]: target.value }])
+        update_data(
+          `${mode ? 'faturas/' : 'invoices/'}${data.id}`,
+          set_datas,
+          { [key]: target.value },
+          500,
+        )
       }}
       {...flags}
     />
@@ -285,7 +224,9 @@ const Input = ({ input, mode, fatura, faturas, set_faturas }) => {
 
 const Registration = ({ id, registered, set_faturas, ...props }) => (
   <Button
-    onClick={() => update_data(id, set_faturas, { registered: !registered })}
+    onClick={() =>
+      update_data(`faturas/${id}`, set_faturas, { registered: !registered })
+    }
     {...props}
   >
     {registered && 'un'}register
@@ -299,12 +240,6 @@ const Modes = Component.as_center.flex.w50.ai_center.jc_between.ml60.mt30.mr_aut
 const Link = Component.text_dec_none.grey6.bb.b_grey2.a()
 const Section = Component.fs18.mb25.pv10.uppercase.mono.ls2.bb.div()
 const Button = Component.order5.ba.hover_b_grey3.anim_border.w110.text_center.b_rad20.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
-
-const Metrics = Component.mt90.flex.ai_center.div()
-const Caption = Component.capitalize.mb10.mono.fs13.div()
-const Data = Component.fs50.mono.grey6.div()
-const Invoiced = Component.ml15.ba0.bb.pa0.input()
-const Amount = Component.ml15.black.span()
 
 const Container = Component.mt100.div()
 const Row = Component.flex.ai_baseline.bb.b_grey2.pv20.div()
@@ -341,7 +276,7 @@ const inputs = {
       rows: ['order2', 'flex2', 'h20'],
     },
   },
-  price: {
+  amount: {
     component: Price,
     placeholder: '19.99',
     classes: { grid: ['mb20'], rows: ['flex1'] },

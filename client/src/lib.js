@@ -12,9 +12,9 @@ atomizify({
 
 export const { Component, Div } = flagify()
 
-export const get_total_amount = (faturas) =>
-  faturas.reduce((acc, fatura) => {
-    const amount = Number(fatura.price) || 0
+export const get_total_amount = (array) =>
+  array.reduce((acc, item) => {
+    const amount = Number(item.amount) || 0
     return (acc = acc + amount)
   }, 0)
 
@@ -22,7 +22,7 @@ export const get_pro_amount = (faturas) =>
   faturas
     .filter((fatura) => fatura.scope !== 'perso')
     .reduce((acc, fatura) => {
-      const number = Number(fatura.price) || 0
+      const number = Number(fatura.amount) || 0
       const amount = (fatura.scope === 'semi' && number * 0.25) || number
       return (acc = acc + amount)
     }, 0)
@@ -44,15 +44,13 @@ export const send_data = (method, path, set_data, data) =>
     body: JSON.stringify(data),
   })
     .then((res) => res.json())
-    .then((res) => {
-      set_data(path.includes('invoiced') ? JSON.parse(res) : res)
-    })
+    .then((res) => set_data(res))
 
 let is_editing
-export const update_data = (id, set_data, updated_value, timer) => {
+export const update_data = (path, set_data, updated_value, timer) => {
   clearTimeout(is_editing)
   is_editing = setTimeout(() => {
-    send_data('put', `faturas/${id}`, set_data, {
+    send_data('put', path, set_data, {
       ...updated_value,
       updated_at: new Date(),
     })
