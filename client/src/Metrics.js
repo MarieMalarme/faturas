@@ -63,7 +63,13 @@ const Amounts = ({ invoices, set_invoices, total_invoices, metrics, goal }) => {
 
   return (
     <Div ml100>
-      {modal && <Modal invoices={invoices} set_invoices={set_invoices} />}
+      {modal && (
+        <Modal
+          invoices={invoices}
+          set_invoices={set_invoices}
+          set_modal={set_modal}
+        />
+      )}
       <Caption c_pointer grey6 flex ai_center onClick={() => set_modal(true)}>
         Invoices<Sum>{total_invoices.toFixed(2)}</Sum>
       </Caption>
@@ -77,11 +83,20 @@ const Amounts = ({ invoices, set_invoices, total_invoices, metrics, goal }) => {
   )
 }
 
-const Modal = ({ invoices, set_invoices }) => {
+const Modal = ({ invoices, set_invoices, set_modal }) => {
+  useEffect(() => {
+    document.addEventListener('keydown', ({ keyCode }) => {
+      keyCode === 27 && set_modal(false)
+    })
+  })
+
   return (
     <Div pa100 zi5 fixed t0 l0 w100vw h100vh bg_white>
-      <Div fs40 mono mb60>
-        Invoices
+      <Div fs40 mono mb60 flex jc_between>
+        <Div>Invoices</Div>
+        <Div c_pointer onClick={() => set_modal(false)}>
+          ×
+        </Div>
       </Div>
       <Invoices>
         {invoices
