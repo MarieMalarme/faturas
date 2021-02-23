@@ -8,6 +8,7 @@ import {
   fetch_data,
   send_data,
   delete_data,
+  get_new_id,
 } from './lib.js'
 
 export const Metrics = ({ faturas }) => {
@@ -115,10 +116,10 @@ const Modal = ({ invoices, set_invoices, set_modal }) => {
           c_pointer
           ai_center
           onClick={() => {
-            const new_id = invoices.length + 1
+            const id = get_new_id(invoices)
             const updated_at = new Date()
             send_data('post', 'invoices', set_invoices, {
-              id: new_id,
+              id,
               updated_at,
             })
           }}

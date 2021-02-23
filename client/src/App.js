@@ -10,6 +10,7 @@ import {
   delete_data,
   array,
   get_today_date,
+  get_new_id,
 } from './lib.js'
 
 const App = () => {
@@ -108,7 +109,7 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
       jc_center={grid}
       w_fit_content={rows}
       onClick={() => {
-        const id = faturas.length + 1
+        const id = get_new_id(faturas)
         const created_at = new Date()
         const registered = category === 'registered'
         const status = !registered ? category : 'unregistered'

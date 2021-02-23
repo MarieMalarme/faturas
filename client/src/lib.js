@@ -12,6 +12,8 @@ atomizify({
 
 export const { Component, Div } = flagify()
 
+export const get_new_id = (list) => Math.max(...list.map(({ id }) => id)) + 1
+
 export const get_total_amount = (array) =>
   array.reduce((acc, item) => {
     const amount = Number(item.amount) || 0
