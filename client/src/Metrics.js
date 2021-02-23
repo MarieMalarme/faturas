@@ -6,6 +6,7 @@ import {
   get_total_amount,
   get_pro_amount,
   fetch_data,
+  send_data,
 } from './lib.js'
 
 export const Metrics = ({ faturas }) => {
@@ -109,6 +110,22 @@ const Modal = ({ invoices, set_invoices, set_modal }) => {
               set_invoices={set_invoices}
             />
           ))}
+        <Item
+          c_pointer
+          ai_center
+          onClick={() => {
+            const new_id = invoices.length + 1
+            const updated_at = new Date()
+            send_data('post', 'invoices', set_invoices, {
+              id: new_id,
+              updated_at,
+            })
+          }}
+        >
+          <Div mono fs14>
+            + Add invoice
+          </Div>
+        </Item>
         <Div w30p />
       </Invoices>
     </Div>
@@ -116,7 +133,7 @@ const Modal = ({ invoices, set_invoices, set_modal }) => {
 }
 
 const Invoice = ({ invoice, invoices, set_invoices }) => (
-  <Div mt30 b_grey2 ai_baseline w30p flex pb10 bb jc_between>
+  <Item ai_baseline>
     {Object.entries(inputs).map((input) => (
       <Input
         key={input[0]}
@@ -126,7 +143,7 @@ const Invoice = ({ invoice, invoices, set_invoices }) => (
         set_datas={set_invoices}
       />
     ))}
-  </Div>
+  </Item>
 )
 
 const Caption = Component.capitalize.mb10.mono.fs13.div()
@@ -134,6 +151,7 @@ const Data = Component.fs50.mono.grey6.div()
 const Sum = Component.ml15.black.span()
 
 const Invoices = Component.flex.flex_wrap.w100p.jc_between.div()
+const Item = Component.mt30.b_grey2.w30p.flex.pb10.bb.jc_between.div()
 const Description = Component.mono.w35p.fs14.ol_none.ba0.pa0.input()
 const Client = Component.w45p.mono.fs14.grey4.ol_none.ba0.pa0.input()
 const Amount = Component.w20p.mono.sapphire4.fs17.ol_none.ba0.text_right.input()

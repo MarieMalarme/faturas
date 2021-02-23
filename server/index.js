@@ -22,6 +22,10 @@ app.get('/invoices', (req, res, next) => {
     .catch(next)
 })
 
+app.post('/invoices', (req, res, next) => {
+  handle_data(req, res, next, invoices_file_path)
+})
+
 app.put('/invoices/:id', (req, res, next) => {
   handle_data(req, res, next, invoices_file_path)
 })
