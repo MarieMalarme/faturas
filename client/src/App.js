@@ -144,7 +144,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
         pv10={rows}
         o100={display}
         style={{ left: rows && '-70px', top: rows && '12px' }}
-        onClick={() => delete_data(id, set_faturas)}
+        onClick={() => delete_data(`faturas/${id}`, set_faturas)}
       >
         ×
       </Delete>

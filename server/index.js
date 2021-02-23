@@ -30,6 +30,10 @@ app.put('/invoices/:id', (req, res, next) => {
   handle_data(req, res, next, invoices_file_path)
 })
 
+app.delete('/invoices/:id', (req, res, next) => {
+  handle_data(req, res, next, invoices_file_path)
+})
+
 const faturas_file_path = path.join(__dirname, `./faturas.data.json`)
 
 app.get('/faturas', (req, res, next) => {

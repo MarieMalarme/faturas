@@ -57,8 +57,8 @@ export const update_data = (path, set_data, updated_value, timer) => {
   }, timer || 0)
 }
 
-export const delete_data = (id, set_data) =>
-  send_data('delete', `faturas/${id}`, set_data)
+export const delete_data = (path, set_data) =>
+  send_data('delete', `${path}`, set_data)
 
 export const get_today_date = () => {
   const today = new Date()

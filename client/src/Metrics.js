@@ -7,6 +7,7 @@ import {
   get_pro_amount,
   fetch_data,
   send_data,
+  delete_data,
 } from './lib.js'
 
 export const Metrics = ({ faturas }) => {
@@ -132,19 +133,36 @@ const Modal = ({ invoices, set_invoices, set_modal }) => {
   )
 }
 
-const Invoice = ({ invoice, invoices, set_invoices }) => (
-  <Item ai_baseline>
-    {Object.entries(inputs).map((input) => (
-      <Input
-        key={input[0]}
-        input={input}
-        data={invoice}
-        datas={invoices}
-        set_datas={set_invoices}
-      />
-    ))}
-  </Item>
-)
+const Invoice = ({ invoice, invoices, set_invoices }) => {
+  const [hovered, set_hovered] = useState(false)
+
+  return (
+    <Item
+      onMouseOver={() => set_hovered(true)}
+      onMouseLeave={() => set_hovered(false)}
+      relative
+      ai_baseline
+    >
+      {Object.entries(inputs).map((input) => (
+        <Input
+          key={input[0]}
+          input={input}
+          data={invoice}
+          datas={invoices}
+          set_datas={set_invoices}
+        />
+      ))}
+      {hovered && (
+        <Delete
+          style={{ right: -25 }}
+          onClick={() => delete_data(`invoices/${invoice.id}`, set_invoices)}
+        >
+          ×
+        </Delete>
+      )}
+    </Item>
+  )
+}
 
 const Caption = Component.capitalize.mb10.mono.fs13.div()
 const Data = Component.fs50.mono.grey6.div()
@@ -155,6 +173,7 @@ const Item = Component.mt30.b_grey2.w30p.flex.pb10.bb.jc_between.div()
 const Description = Component.mono.w35p.fs14.ol_none.ba0.pa0.input()
 const Client = Component.w45p.mono.fs14.grey4.ol_none.ba0.pa0.input()
 const Amount = Component.w20p.mono.sapphire4.fs17.ol_none.ba0.text_right.input()
+const Delete = Component.absolute.pl25.c_pointer.div()
 
 const inputs = {
   description: { component: Description, placeholder: 'Mission' },
