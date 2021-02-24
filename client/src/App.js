@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react'
 import { Icon } from './icons.js'
 import { Metrics } from './Metrics.js'
 import { Category } from './Faturas.js'
+import { Modal } from './Modal.js'
 import { Component } from './flags.js'
 import { fetch_data, update_data } from './data.js'
 
 const App = () => {
   const [mode, set_mode] = useState('grid')
   const [faturas, set_faturas] = useState([])
+  const [selected, set_selected] = useState(null)
 
   useEffect(() => {
     fetch_data('faturas', set_faturas)
@@ -35,15 +37,23 @@ const App = () => {
           key={category}
           faturas={faturas}
           set_faturas={set_faturas}
+          selected={selected}
+          set_selected={set_selected}
           category={category}
           mode={mode}
         />
       ))}
+      <Modal
+        selected={selected}
+        faturas={faturas}
+        set_faturas={set_faturas}
+        set_selected={set_selected}
+      />
     </Page>
   )
 }
 
-export const Input = ({ input, mode, data, datas, set_datas }) => {
+export const Input = ({ input, mode, data, datas, set_datas, data_type }) => {
   const [key, { component, placeholder, classes }] = input
   const Component = component
   const other_datas = datas.filter((f) => f.id !== data.id)
@@ -60,7 +70,7 @@ export const Input = ({ input, mode, data, datas, set_datas }) => {
       onChange={({ target }) => {
         set_datas([...other_datas, { ...data, [key]: target.value }])
         update_data(
-          `${mode ? 'faturas/' : 'invoices/'}${data.id}`,
+          `${data_type}/${data.id}`,
           set_datas,
           { [key]: target.value },
           500,

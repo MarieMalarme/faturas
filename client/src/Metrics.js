@@ -144,6 +144,7 @@ const Invoice = ({ invoice, invoices, set_invoices }) => {
           data={invoice}
           datas={invoices}
           set_datas={set_invoices}
+          data_type="invoices"
         />
       ))}
       {hovered && (

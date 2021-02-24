@@ -4,7 +4,8 @@ import { Component, Div } from './flags.js'
 import { send_data, update_data, delete_data } from './data.js'
 import { array, get_today_date, get_new_id } from './toolbox.js'
 
-export const Category = ({ faturas, set_faturas, category, mode }) => {
+export const Category = (props) => {
+  const { faturas, set_faturas, set_selected, category, mode } = props
   const Faturas = (mode === 'grid' && Grid) || Div
   const registered_category = category === 'registered'
   const filtered_faturas = faturas
@@ -32,6 +33,7 @@ export const Category = ({ faturas, set_faturas, category, mode }) => {
             fatura={fatura}
             faturas={faturas}
             set_faturas={set_faturas}
+            set_selected={set_selected}
             mode={mode}
           />
         ))}
@@ -77,17 +79,20 @@ const NewFatura = ({ category, mode, faturas, set_faturas }) => {
   )
 }
 
-const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
+const Fatura = ({ fatura, faturas, set_faturas, set_selected, mode }) => {
   const [display, set_display] = useState(false)
   const { date, scope, registered, id } = fatura
   const grid = mode === 'grid'
   const rows = mode === 'rows'
   const perso = scope === 'perso'
-
   const Container = (grid && Card) || (rows && Row)
 
   return (
     <Container
+      id={`fatura-${id}`}
+      onClick={({ target }) => {
+        target.id === `fatura-${id}` && set_selected(fatura)
+      }}
       onMouseOver={() => set_display(true)}
       onMouseLeave={() => set_display(false)}
       relative
@@ -136,6 +141,7 @@ const Fatura = ({ fatura, faturas, set_faturas, mode, category }) => {
           data={fatura}
           datas={faturas}
           set_datas={set_faturas}
+          data_type="faturas"
         />
       ))}
       <Registration
@@ -163,9 +169,9 @@ const Section = Component.fs18.mb25.pv10.uppercase.mono.ls2.bb.div()
 const Button = Component.order5.ba.hover_b_grey3.anim_border.w110.text_center.b_rad20.c_pointer.pv5.ph15.uppercase.fs10.ls2.b_grey2.div()
 
 const Container = Component.mt100.div()
-const Row = Component.flex.ai_baseline.bb.b_grey2.pv20.div()
+const Row = Component.c_pointer.flex.ai_baseline.bb.b_grey2.pv20.div()
 const Grid = Component.mt50.flex.flex_wrap.jc_between.div()
-const Card = Component.w15p.ai_center.ba.pt15.pb30.ph15.mb35.b_grey2.flex.flex_column.min_h240.div()
+const Card = Component.c_pointer.w15p.ai_center.ba.pt15.pb30.ph15.mb35.b_grey2.flex.flex_column.min_h240.div()
 const Infos = Component.flex.jc_between.w100p.uppercase.fs10.div()
 const Add = Component.ml15.fs12.uppercase.mono.ls1.div()
 const Delete = Component.o0.anim_opacity.grey5.ph30.c_pointer.absolute.div()
@@ -175,7 +181,7 @@ const Day = Component.fs11.mono.ls1.ba0.ol_none.pa0.w50.input()
 const Hider = Component.absolute.bg_white.w10.h20.div()
 const Scope = Component.uppercase.fs10.ls2.c_pointer.div()
 const Name = Component.fs20.w100p.ba0.ol_none.input()
-const Seller = Component.mono.grey3.fs12.w100p.ba0.ol_none.h_auto.textarea()
+const Seller = Component.mono.grey4.fs12.w100p.ba0.ol_none.h_auto.textarea()
 const Price = Component.order4.fs15.mono.ls1.w100p.ba0.ol_none.input()
 
 const Placeholders = array(5).map((e) => <Div key={e} w15p />)
