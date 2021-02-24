@@ -1,15 +1,8 @@
 import { useState } from 'react'
 import { Input } from './App.js'
-import {
-  Component,
-  Div,
-  send_data,
-  update_data,
-  delete_data,
-  array,
-  get_today_date,
-  get_new_id,
-} from './lib.js'
+import { Component, Div } from './flags.js'
+import { send_data, update_data, delete_data } from './data.js'
+import { array, get_today_date, get_new_id } from './toolbox.js'
 
 export const Category = ({ faturas, set_faturas, category, mode }) => {
   const Faturas = (mode === 'grid' && Grid) || Div

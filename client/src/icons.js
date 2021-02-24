@@ -1,4 +1,5 @@
-import { Component, array } from './lib.js'
+import { Component } from './flags.js'
+import { array } from './toolbox.js'
 
 export const Icon = ({ mode, set_mode, type }) => {
   const grid = type === 'grid'

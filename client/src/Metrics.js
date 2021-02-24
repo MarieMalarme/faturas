@@ -1,15 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Input } from './App.js'
-import {
-  Component,
-  Div,
-  get_total_amount,
-  get_pro_amount,
-  fetch_data,
-  send_data,
-  delete_data,
-  get_new_id,
-} from './lib.js'
+import { Component, Div } from './flags.js'
+import { get_total_amount, get_pro_amount, get_new_id } from './toolbox.js'
+import { fetch_data, send_data, delete_data } from './data.js'
 
 export const Metrics = ({ faturas }) => {
   const [invoices, set_invoices] = useState([])

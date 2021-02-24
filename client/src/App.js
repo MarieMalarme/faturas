@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { Icon } from './icons.js'
 import { Metrics } from './Metrics.js'
 import { Category } from './Faturas.js'
-import { Component, fetch_data, update_data } from './lib.js'
+import { Component } from './flags.js'
+import { fetch_data, update_data } from './data.js'
 
 const App = () => {
   const [mode, set_mode] = useState('grid')
