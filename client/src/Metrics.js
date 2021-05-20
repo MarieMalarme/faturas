@@ -47,7 +47,7 @@ const Graph = ({ metrics, goal }) => {
 
   return (
     <Div mt25 w200 h4 bg_grey1>
-      <Div h4 bg_sapphire2 style={{ width: `${percentage * 100}%` }} />
+      <Div max_w200 h4 bg_sapphire2 style={{ width: `${percentage * 100}%` }} />
     </Div>
   )
 }
